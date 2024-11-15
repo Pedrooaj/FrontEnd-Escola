@@ -32,12 +32,19 @@ const routes = [
     {
         path: "/login",
         name: "Login",
-        component: () => import('./routes/Login.vue')
+        component: () => import('./routes/Login.vue'),
     },
     {
         path: "/register",
         name: "Register",
         component: () => import('./routes/Register.vue')
+    },
+    {
+        path: "/",
+        name: "Home",
+        meta: {
+            home: true
+        } 
     }
 
 ]
@@ -48,23 +55,22 @@ const appRoutes = createRouter({
 })
 
 
-appRoutes.beforeEach((to, from, next) => {
+appRoutes.beforeEach(async (to, from, next) => {
+    if(to.meta?.home){
+        next({ name: "Login" })
+    }
+
+
     if(to.meta?.auth){
         const store = useGlobalStore();
+        const isAuthenticated = await store.isAuth();
 
-        if(store.token){
-            const isAuthenticated = store.isAuth();
-
-            isAuthenticated.then((res) => {
-                if(res){
-                    next();
-                }else{
-                    next({name: "Login"})
-                }
-            })
+        if(isAuthenticated){
+            next();
         }else{
-            next({name: "Login"})
+            next({ name: 'Login' });
         }
+
     }else{
         next();
     }

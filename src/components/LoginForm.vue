@@ -24,9 +24,7 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import axios from 'axios';
-import { useGlobalStore } from '../stores/GlobalStore';
 import { useToast } from 'vue-toastification';
-const store = useGlobalStore();
 const toast = useToast();
 
 
@@ -39,11 +37,12 @@ const user = ref({ email: "", password: "" });
 
 const handleSubmit = async () => {
     try {
-        const response = await axios.post("http://localhost:3000/token", user.value);
-        store.setToken(response.data.token);
-        localStorage.setItem('token', response.data.token);
+        const response = await axios.post("http://localhost:3000/token", user.value, {
+            withCredentials: true // Crendencial para receber cookie 
+        });
         toast.success(`Seja bem vindo, ${response.data.nome}`, { position: "bottom-left" });
         router.push('/dashboard');
+
     } catch (error) {
         toast.error(error.response.data.errors[0], { position: "bottom-left" });
     }
@@ -72,9 +71,9 @@ const handleSubmit = async () => {
     justify-content: center;
     padding: 20px;
     border-radius: 10px;
-    width: auto;
+    width: 30%;
     height: auto;
-    padding: 60px 170px;
+    padding: 50px 15px;
     background-color: azure;
     -webkit-box-shadow: 2px 10px 26px -6px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 2px 10px 26px -6px rgba(0, 0, 0, 0.75);
@@ -87,12 +86,22 @@ const handleSubmit = async () => {
     }
 }
 
-#formulario>div {
-    width: 120%;
+@media (max-width: 550px) {
+    #formulario{
+        width: 75%;
+    }
+}
+
+
+
+#formulario > div {
+    width: 60%;
 }
 
 #formulario>button {
-    width: 100%;
+    width: 50%;
     padding: 15px 0;
 }
+
+
 </style>

@@ -1,9 +1,11 @@
 <template>
     <div id="contain">
-        <Searchbar />
-
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+            <Searchbar />
+            <AddModal />
+        </div>
         <AlunosList v-if="alunos.length" :alunos="alunos" />
-        <h1 style="color: white;" v-else>Nenhum aluno por aqui...</h1>
+        <div style="color: white;" v-else><h1>Nenhum aluno por aqui...</h1></div>
     </div>
 </template>
 
@@ -12,17 +14,20 @@ import AlunosList from "../../components/AlunosList.vue";
 import axios from 'axios';
 import { onMounted, onBeforeUnmount, ref } from 'vue';
 import Searchbar from "../../components/Searchbar.vue";
+import AddModal from "../../components/AddModal.vue";
+
 
 
 const alunos = ref([]);
 
 async function getAlunos() {
     try {
-        const response = await axios.get("http://localhost:3000/alunos");
+        const response = await axios.get("http://localhost:3000/alunos",{
+            withCredentials: true
+        });
         alunos.value = response.data;
     } catch (error) {
         console.log(error);
-
     }
 }
 
@@ -49,7 +54,7 @@ onBeforeUnmount(() => {
         align-items: center;
     }
 
-    #contain > h1{
+    #contain > div{
      margin-bottom: auto;   
     }
 

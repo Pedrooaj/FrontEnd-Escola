@@ -86,9 +86,9 @@ const handleSubmit = async () => {
     justify-content: center;
     padding: 20px;
     border-radius: 10px;
-    width: auto;
+    width: 30%;
     height: auto;
-    padding: 60px 170px;
+    padding: 50px 15px;
     background-color: azure;
     -webkit-box-shadow: 2px 10px 26px -6px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: 2px 10px 26px -6px rgba(0, 0, 0, 0.75);
@@ -101,12 +101,18 @@ const handleSubmit = async () => {
     }
 }
 
-#formulario>div {
-    width: 130%;
+@media (max-width: 550px) {
+    #formulario{
+        width: 75%;
+    }
+}
+
+#formulario > div {
+    width: 60%;
 }
 
 #formulario>button {
-    width: 100%;
+    width: 50%;
     padding: 15px 0;
 }
 </style>

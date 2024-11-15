@@ -5,10 +5,10 @@
         <div>
             <h5>{{ aluno.nome + " " + aluno.sobrenome }}</h5>
             <button id="modal-button" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#modal">
+                data-bs-target="#modal-edit">
                 Editar
             </button>
-            <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -17,7 +17,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div id="student-image">
+                            <div id="student-image-Edit">
                                 <img id="image" v-if="aluno.Fotos[0]" :src="aluno.Fotos[0].url">
                                 <V-icon v-else id="image" name="fa-user-graduate" />
                                 <input type="file">
@@ -26,22 +26,23 @@
                                 <div class="col">
                                     <input type="text" class="form-control" placeholder="Nome" aria-label="First name">
                                 </div>
-                                <div class="col">
+                                <div class="col mb-3">
                                     <input type="text" class="form-control" placeholder="Sobrenome"
                                         aria-label="Last name">
                                 </div>
                                 <div style="display: flex; align-items: start; flex-direction: column;" class="mb-3">
-                                    <label style="margin-top: 5px; margin-left: 2px;" for="exampleFormControlInput1"
-                                        class="form-label">Email</label>
                                     <input type="email" class="form-control" id="exampleFormControlInput1"
                                         placeholder="email@example.com">
                                 </div>
                                 <div class="col">
-                                    <input type="number" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    <input v-model="aluno.idade" type="number" class="form-control" placeholder="Idade">
+                                </div>
+                                <div class="col">
+                                    <input type="number" 
                                         class="form-control" placeholder="Altura">
                                 </div>
                                 <div class="col">
-                                    <input type="number" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    <input type="number"
                                         class="form-control" placeholder="Peso">
                                 </div>
 
@@ -64,25 +65,19 @@
 const props = defineProps({
     aluno: Object
 });
-
 import axios from 'axios';
-import { useGlobalStore } from '../stores/GlobalStore';
 import { useToast } from 'vue-toastification';
 
-const store = useGlobalStore();
 const toast = useToast();
 
 const handleDelete = async () => {
     await axios.delete(`http://localhost:3000/alunos/${props.aluno.id}`, {
-        headers: {
-            Authorization: `Bearer ${store.getToken}`
-        }
+        withCredentials: true
     }).then((result) => {
         toast.success("Aluno deletado com sucesso!", { position: 'bottom-left' })
     }).catch((error) => {
-        toast.error("Erro ao deletar aluno! ", { position: 'bottom-left' })  
+        toast.error("Erro ao deletar aluno! ", { position: 'bottom-left' })
     })
-
 }
 
 </script>
@@ -112,20 +107,19 @@ const handleDelete = async () => {
     border: 1px solid black;
 }
 
-#student-image {
+#student-image-Edit {
     width: 100%;
     height: 150px;
 }
 
-#student-image>#image {
-
+#student-image-Edit>#image {
     border-radius: 100%;
     border: 2px solid black;
     width: 30%;
     height: 90%;
 }
 
-#student-image input[type="file"] {
+#student-image-Edit input[type="file"] {
     position: absolute;
     opacity: 0;
     width: 30%;

@@ -14,7 +14,7 @@
                 <V-Icon scale="1.8" name="io-school-sharp" />
                 <p id="text-side">Alunos</p>
             </li>
-            <li @click="route.push('/dashboard/conta')"  id="item">
+            <li @click="route.push('/dashboard/conta')" id="item">
                 <V-Icon scale="1.8" name="fa-user-circle" />
                 <p id="text-side">Conta</p>
             </li>
@@ -30,27 +30,35 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 const status = ref(false);
 const route = useRouter();
 
-const handleLogout = () => {
-    localStorage.removeItem('token');
-    route.push('/login')
+
+const handleLogout = async () => {
+    await axios.delete("http://localhost:3000/token/logout", {
+        withCredentials: true
+    })    
+    route.push('/login');
 }
 
 watch(status, (newValue) => {
     const side = document.querySelector('aside');
     const texts = document.querySelectorAll('#text-side');
 
+
     if (!newValue) {
-        side.style.width = '20%';
+        side.style.width = '25%';
+        
         texts.forEach((item) => {
             item.style.opacity = '0';
         })
     } else {
+        side.style.maxWidth = '100%';
         side.style.width = '100%';
+
         texts.forEach((item) => {
             item.style.opacity = '1';
         })
@@ -63,15 +71,15 @@ watch(status, (newValue) => {
 aside {
     background-color: #F1F1F1;
     height: 100%;
-    padding: 20px 0;
-    width: 20%;
+    max-width: 25%;
     transition: all 0.3s ease-in-out;
 }
+
 
 aside ul {
     display: flex;
     align-items: start;
-    margin: 0;
+    margin: 0 15px;
     padding: 0;
     flex-direction: column;
     gap: 25px;
@@ -94,15 +102,15 @@ aside ul li p {
     white-space: nowrap;
     overflow: hidden;
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-in-out;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 1.2rem;
 }
 
 
 
 #logout {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     margin-bottom: 20px;
 }
